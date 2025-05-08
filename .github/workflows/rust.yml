@@ -27,16 +27,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: List files
-        run: |
-          echo "==== ROOT ===="
-          pwd
-          ls -l
-          echo "==== PYBPE_OPENAI ===="
-          ls -l pybpe_openai
-          echo "==== RUST-GEMS ===="
-          ls -l rust-gems
-
       - name: Build wheel
         uses: PyO3/maturin-action@v1
         with:
