@@ -27,6 +27,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: build
+          args: --release
           working-directory: pybpe_openai
       - uses: actions/upload-artifact@v4
         with:
