@@ -10,13 +10,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout with submodules
+        uses: actions/checkout@v4
         with:
           submodules: recursive
-      - uses: PyO3/maturin-action@v1
+      - name: List files
+        run: |
+          echo "==== ROOT ===="
+          pwd
+          ls -l
+          echo "==== PYBPE_OPENAI ===="
+          ls -l pybpe_openai
+          echo "==== RUST-GEMS ===="
+          ls -l rust-gems
+      - name: Build wheels (manylinux)
+        uses: PyO3/maturin-action@v1
         with:
           command: build
-          args: --release --out dist --manylinux 2014
           working-directory: pybpe_openai
       - uses: actions/upload-artifact@v4
         with:
