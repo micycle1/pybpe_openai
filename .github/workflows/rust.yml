@@ -47,17 +47,15 @@ jobs:
           path: pybpe_openai/target/wheels/*.whl
 
   collect:
-    # This runs after "build" job completes all matrix axes
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
-          # Download all wheel artifacts
+          # Download all wheel artifacts from the build job
           name: ""
           path: collected_wheels
 
-      # This will flatten to collected_wheels/** and pick them all up
       - name: List all wheels
         run: ls -lhR collected_wheels
 
@@ -65,3 +63,13 @@ jobs:
         with:
           name: all-wheels
           path: collected_wheels/**/*.whl
+
+      - name: Install Twine
+        run: pip install --upgrade twine
+
+      - name: Publish to TestPyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TESTPYPI_API_TOKEN }}
+        run: |
+          twine upload --repository-url https://test.pypi.org/legacy/ collected_wheels/**/*.whl
