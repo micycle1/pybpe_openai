@@ -1,3 +1,22 @@
 [build-system]
 requires = ["maturin>=1.4,<2.0"]
 build-backend = "maturin"
+[project]
+name = "pybpe_openai"
+version = "0.3.0"
+authors = [
+  { name="Michael Carleton", email="micycle1@hotmail.co.uk" },
+]
+description = "Python bindings for Github's Fast tokenizers for OpenAI"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/micycle1/pybpe_openai"
+Issues = "https://github.com/micycle1/pybpe_openai/issues"
