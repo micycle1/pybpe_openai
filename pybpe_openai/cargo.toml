@@ -1,0 +1,15 @@
+[package]
+name = "pybpe_openai"
+version = "0.1.0"
+edition = "2025"
+authors = ["Michael Carleton"]
+description = "Python bindings for OpenAI BPE tokenizers using bpe-openai from github/rust-gems"
+
+[lib]
+name = "pybpe_openai"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+bpe-openai = { path = "../rust-gems/crates/bpe-openai" }
+bpe = { path = "../rust-gems/crates/bpe" }
