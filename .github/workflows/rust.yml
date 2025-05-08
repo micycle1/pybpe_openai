@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
@@ -35,11 +35,10 @@ jobs:
         run: |
           pip install virtualenv
           virtualenv venv
-          source venv/bin/activate
+          source venv/bin/activate 2>/dev/null || source venv/Scripts/activate
           pip install pybpe_openai/target/wheels/*.whl
           python -c "import pybpe_openai; print('Import worked')"
           python -c "import pybpe_openai; print(pybpe_openai.cl100k().count('hello'))"
-          deactivate
 
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v4
