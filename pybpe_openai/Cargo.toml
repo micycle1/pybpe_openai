@@ -1,9 +1,9 @@
 [package]
 name = "pybpe_openai"
-version = "0.1.0"
+version = "0.3.0"
 edition = "2021"
 authors = ["Michael Carleton"]
-description = "Python bindings for OpenAI BPE tokenizers using bpe-openai from github/rust-gems"
+description = "Python bindings for Github's Fast tokenizers for OpenAI"
 
 [lib]
 name = "pybpe_openai"
