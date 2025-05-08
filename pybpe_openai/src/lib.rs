@@ -1,12 +1,13 @@
 use pyo3::prelude::*;
 use std::sync::OnceLock;
 
-static CL100K: OnceLock<bpe_openai::Bpe> = OnceLock::new();
-static O200K: OnceLock<bpe_openai::Bpe> = OnceLock::new();
+// The actual `Tokenizer` struct is exported at the top level of bpe-openai
+static CL100K: OnceLock<&'static bpe_openai::Tokenizer> = OnceLock::new();
+static O200K: OnceLock<&'static bpe_openai::Tokenizer> = OnceLock::new();
 
 #[pyclass]
 struct BPETokenizer {
-    tokenizer: &'static bpe_openai::Bpe,
+    tokenizer: &'static bpe_openai::Tokenizer,
 }
 
 #[pymethods]
@@ -14,24 +15,22 @@ impl BPETokenizer {
     fn count(&self, text: &str) -> usize {
         self.tokenizer.count(text)
     }
-    fn encode(&self, text: &str) -> Vec<usize> {
+    fn encode(&self, text: &str) -> Vec<u32> {
         self.tokenizer.encode(text)
     }
 }
 
-/// Get the CL100K tokenizer.
 #[pyfunction]
 fn cl100k() -> BPETokenizer {
     BPETokenizer {
-        tokenizer: CL100K.get_or_init(|| bpe_openai::cl100k()),
+        tokenizer: CL100K.get_or_init(|| bpe_openai::cl100k_base()),
     }
 }
 
-/// Get the O200K tokenizer.
 #[pyfunction]
 fn o200k() -> BPETokenizer {
     BPETokenizer {
-        tokenizer: O200K.get_or_init(|| bpe_openai::o200k()),
+        tokenizer: O200K.get_or_init(|| bpe_openai::o200k_base()),
     }
 }
 
