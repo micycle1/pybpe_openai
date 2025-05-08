@@ -31,4 +31,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: wheels
-          path: pybpe_openai/dist/
+          path: pybpe_openai/target/wheels/
