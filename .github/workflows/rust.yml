@@ -10,32 +10,47 @@ jobs:
   build:
     strategy:
       matrix:
-        # OS and Python version matrix
         os: [ubuntu-latest, windows-latest]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-
     runs-on: ${{ matrix.os }}
-
+    outputs:
+      artifact_name: ${{ steps.set-artifact-name.outputs.artifact_name }}
     steps:
-      - name: Checkout with submodules
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
       - name: Build wheel
         uses: PyO3/maturin-action@v1
         with:
           command: build
           args: --release
           working-directory: pybpe_openai
-
-      - name: Upload wheel artifact
-        uses: actions/upload-artifact@v4
+      - id: set-artifact-name
+        run: echo "artifact_name=wheel-${{ matrix.os }}-cp${{ matrix.python-version }}" >> $GITHUB_OUTPUT
+      - uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}-cp${{ matrix.python-version }}
+          name: wheel-${{ matrix.os }}-cp${{ matrix.python-version }}
           path: pybpe_openai/target/wheels/*.whl
+
+  collect:
+    # This runs after "build" job completes all matrix axes
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          # Download all wheel artifacts
+          name: ""
+          path: collected_wheels
+
+      # This will flatten to collected_wheels/** and pick them all up
+      - name: List all wheels
+        run: ls -lhR collected_wheels
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-wheels
+          path: collected_wheels/**/*.whl
