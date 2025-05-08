@@ -8,12 +8,25 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # OS and Python version matrix
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout with submodules
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - name: List files
         run: |
           echo "==== ROOT ===="
@@ -23,13 +36,16 @@ jobs:
           ls -l pybpe_openai
           echo "==== RUST-GEMS ===="
           ls -l rust-gems
-      - name: Build wheels (manylinux)
+
+      - name: Build wheel
         uses: PyO3/maturin-action@v1
         with:
           command: build
           args: --release
           working-directory: pybpe_openai
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload wheel artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: wheels
-          path: pybpe_openai/target/wheels/
+          name: wheels-${{ matrix.os }}-cp${{ matrix.python-version }}
+          path: pybpe_openai/target/wheels/*.whl
