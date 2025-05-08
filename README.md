@@ -14,11 +14,7 @@ Supported tokenizers:
 
 ## Installation
 
-Install directly from GitHub (using pip's [subdirectory](https://pip.pypa.io/en/stable/topics/vcs-support/#installables-containing-their-own-projects) feature):
-
-```bash
-pip install "git+https://github.com/micycle1/pybpe_openai.git#subdirectory=pybpe_openai"
-```
+See [PyPI](https://test.pypi.org/project/pybpe-openai/0.3.0/) (note test for now).
 
 ## Usage Example
 
